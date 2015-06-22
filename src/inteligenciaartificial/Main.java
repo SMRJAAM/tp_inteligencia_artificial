@@ -121,6 +121,7 @@ public class Main extends javax.swing.JFrame {
         jTextFieldURL.setFocusable(false);
         jTextFieldURL.setPreferredSize(new java.awt.Dimension(450, 28));
 
+        jButtonProcurar.setMnemonic('I');
         jButtonProcurar.setText("Importar");
         jButtonProcurar.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -144,6 +145,7 @@ public class Main extends javax.swing.JFrame {
             }
         });
 
+        jButtonLimpar.setMnemonic('L');
         jButtonLimpar.setText("Limpar");
         jButtonLimpar.setEnabled(false);
         jButtonLimpar.addActionListener(new java.awt.event.ActionListener() {
@@ -152,6 +154,7 @@ public class Main extends javax.swing.JFrame {
             }
         });
 
+        jButtonClassificar.setMnemonic('C');
         jButtonClassificar.setText("Classificar");
         jButtonClassificar.setEnabled(false);
         jButtonClassificar.addActionListener(new java.awt.event.ActionListener() {
@@ -355,7 +358,7 @@ public class Main extends javax.swing.JFrame {
 
         jMenuBar1.add(jMenuArquivo);
 
-        jMenuSobre.setMnemonic('I');
+        jMenuSobre.setMnemonic('F');
         jMenuSobre.setText("Info");
         jMenuSobre.setPreferredSize(new java.awt.Dimension(50, 28));
         jMenuSobre.addActionListener(new java.awt.event.ActionListener() {
@@ -643,7 +646,6 @@ public class Main extends javax.swing.JFrame {
             numInstances = baseArffTreino.numInstances();
             int numFolds = 0;
             int divisor = 1000;
-            String matrizes = "";
             int index = 0;
             
             do {
@@ -659,9 +661,8 @@ public class Main extends javax.swing.JFrame {
                 index = index + divisor;   
             }
 
-            for (int i = 0; i < numFolds-1; i++){
+            for (int i = 0; i < numFolds; i++){
                 
-                Collections.swap(instancesList, i, instancesList.size()-1);
                 Instances treino = new Instances(instancesList.get(0));
                 for (int j = 0; j < instancesList.size()-1; j++){
                     for (int c = 0; c < instancesList.get(j).numInstances(); c++){
@@ -669,6 +670,8 @@ public class Main extends javax.swing.JFrame {
                     }
                 }
                 Instances teste = new Instances(instancesList.get(instancesList.size()-1));
+                
+                Collections.swap(instancesList, i, instancesList.size()-1);
                 
                 classificador.buildClassifier(treino);
                 
@@ -686,9 +689,7 @@ public class Main extends javax.swing.JFrame {
                 }
 
                 matrizConfusaoList.add(calcularMatrizConfusao(matrix));
-                
-//                matrizes += printMatrizConfusao(title, teste, matrizConfusaoList.get(matrizConfusaoList.size()-1));            
-                
+
             }
             
             double mediaPrecisao = 0;
@@ -848,18 +849,20 @@ public class Main extends javax.swing.JFrame {
     public String printMatrizConfusao(String title, Instances base, MatrizConfusao mc) {
         int numValues = base.attribute(attrClasse).numValues();
 
+        String td = "style='background-color: white'";
+        String table = "style='border: 1px black solid; background-color: black' width='100%' cellspacing='1' cellpadding='2'";
+        
         String matriz = ("<table><tr><td>");
-
-        matriz += ("<table border=\"1\">");
-        matriz += ("<tr><th colspan=\"" + (base.numClasses()+1) + "\">" + title + "</th></tr>");
-        matriz += ("<tr><td></td>");
+        matriz += ("<table "+table+" >");
+        matriz += ("<tr><th colspan=\"" + (base.numClasses()+1) + "\"  "+td+" >" + title + "</th></tr>");
+        matriz += ("<tr><td "+td+" ></td>");
         for (int i = 0; i < numValues; i++) {
-            matriz += ("<td>" + base.instance(i).attribute(attrClasse).value(i) + "</td>");          
+            matriz += ("<td "+td+" >" + base.instance(i).attribute(attrClasse).value(i) + "</td>");          
         }
         for (int i = 0; i < numValues; i++) {
-            matriz += ("<tr><td>" + base.instance(i).attribute(attrClasse).value(i) + "</td>");
+            matriz += ("<tr><td "+td+" >" + base.instance(i).attribute(attrClasse).value(i) + "</td>");
             for (int j = 0; j < numValues; j++) {
-                matriz += "<td>";
+                matriz += "<td "+td+" >";
                 if (i == j) {
                     matriz += "<font color=\"#FFF\">" + mc.matrix[j][i] + "</font>";
                 } else {
@@ -975,7 +978,7 @@ public class Main extends javax.swing.JFrame {
         jButtonProcurar.setEnabled(importStatus != 2);
         SwingUtilities.invokeLater(doScroll);
         
-        jTextFieldURL.setText(null);
+//        jTextFieldURL.setText(null);
     }
 
     private double arredondarNumero(double numero, int precisao) {
