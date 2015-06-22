@@ -424,7 +424,7 @@ public class Main extends javax.swing.JFrame {
 
         if (jCheckBoxIBk.isSelected()) {
             try {
-                matriz += classificarWeka(baseArffTeste, baseArffTreino, new IBk());
+                matriz += classificarWeka(baseArffTeste, baseArffTreino, new IBk(3));
             } catch (Exception ex) {
                 Logger.getLogger(Main.class.getName()).log(Level.SEVERE, null, ex);
             }
